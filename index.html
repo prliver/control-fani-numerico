@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>FANI Lab | Centro Avanzado de Simulación Numérica Aeroespacial</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1>🛸 FANI·LAB</h1>
+            <p>SISTEMA DE TELEMETRÍA NUMÉRICA</p>
+        </div>
+        <nav class="nav">
+            <div class="nav-group">
+                <div class="nav-group-title">📡 Módulos de Análisis</div>
+                <a href="#modulo-sistemas"      class="nav-link"><span class="nav-dot" style="color:var(--color-1);"></span> A. Triangulación Radar</a>
+                <a href="#modulo-edo"           class="nav-link"><span class="nav-dot" style="color:var(--color-2);"></span> B. Descenso Cinemático</a>
+                <a href="#modulo-interpolacion" class="nav-link"><span class="nav-dot" style="color:var(--color-3);"></span> C. Reconstrucción Ruta</a>
+                <a href="#modulo-integracion"   class="nav-link"><span class="nav-dot" style="color:var(--color-4);"></span> D. Desplazamiento Total</a>
+                <a href="#modulo-raices"        class="nav-link"><span class="nav-dot" style="color:var(--color-5);"></span> E. Umbral de Propulsión</a>
+                <a href="#modulo-malcond"       class="nav-link"><span class="nav-dot" style="color:var(--color-6);"></span> F. Mal Condicionamiento</a>
+                <a href="#modulo-social"        class="nav-link"><span class="nav-dot" style="color:var(--color-7);"></span> G. Dinámica Social (RK4)</a>
+            </div>
+            <div class="nav-group">
+                <div class="nav-group-title">📊 Auditoría Global</div>
+                <a href="#conclusiones" class="nav-link">Conclusiones Académicas</a>
+            </div>
+        </nav>
+    </aside>
+
+    <div class="topbar-mobile" id="topbarMobile">
+        <button class="hamburger" id="hamburgerBtn">☰</button>
+        <span class="topbar-title">FANI Lab Terminal</span>
+    </div>
+
+    <main class="main-content" id="mainContent">
+        <section class="hero">
+            <h1>Sistema Interactivo de Simulación y Análisis de FANI</h1>
+            <p>Plataforma computacional de modelado matemático enfocado en el análisis riguroso de Fenómenos Aéreos No Identificados. El sistema procesa señales electromagnéticas latentes, dinámicas gravitacionales extremas y curvas cinemáticas no convencionales mediante algoritmos numéricos desacoplados.</p>
+        </section>
+
+        <section id="modulo-sistemas" class="modulo" data-modulo="sistemas">
+            <div class="modulo-header">
+                <span class="eyebrow" style="background:var(--color-1-bg);color:var(--color-1);">📡 Escenario A</span>
+                <h2>Triangulación Espacial 3D por Radar</h2>
+                <p>Localización tridimensional de vectores anómalos intersecando esferas electromagnéticas simultáneas. Método: <strong>Gauss-Seidel con Pivoteo Parcial</strong>.</p>
+            </div>
+            <div class="context-card"><div class="context-grid">
+                <div><strong>Detección Fenomenológica</strong>Simultaneidad geométrica capturada por tres antenas de base terrestre.</div>
+                <div><strong>Definición de Variables</strong>Coordenadas espaciales de origen $(x_i, y_i, z_i)$ y radios de alcance radial $d_i$.</div>
+                <div><strong>Incógnita Operacional</strong>Resolución del sistema no lineal reducido por sustracción a un sistema matricial lineal $Ax=b$.</div>
+            </div></div>
+            <div class="tabs-container">
+                <div class="tabs-buttons">
+                    <button class="tab-btn active">Fundamento Teórico</button>
+                    <button class="tab-btn">Iteración Gauss-Seidel</button>
+                </div>
+                <div class="tab-content active">A partir de las ecuaciones de distancia radial $(x-x_i)^2+(y-y_i)^2+(z-z_i)^2=d_i^2$, la sustracción algebraica de pares algebraicos cancela los componentes cuadráticos libres, transformando el problema en una matriz de coeficientes lineales de primer grado.</div>
+                <div class="tab-content">El resolvedor ejecuta aproximaciones sucesivas mediante sustitución iterativa inmediata. Aplica un criterio de dominancia diagonal artificial vía permutación de filas para asegurar la convergencia asintótica bajo una tolerancia estricta de $1\times10^{-8}$.</div>
+            </div>
+            <div class="panel-analisis">
+                <h3 style="color:var(--color-1);">🕹️ Parámetros de Estaciones de Radar</h3>
+                <div class="form-grid">
+                    <label>Estación Alfa (x,y,z): <input type="text" id="sist_x1" value="0,0,0"></label>
+                    <label>Radio d₁ (km): <input type="number" id="sist_d1" value="10"></label>
+                    <label>Estación Beta (x,y,z): <input type="text" id="sist_x2" value="10,0,0"></label>
+                    <label>Radio d₂ (km): <input type="number" id="sist_d2" value="10"></label>
+                    <label>Estación Gamma (x,y,z): <input type="text" id="sist_x3" value="5,8,3"></label>
+                    <label>Radio d₃ (km): <input type="number" id="sist_d3" value="8"></label>
+                </div>
+                <button class="btn-ejecutar" data-modulo="sistemas">▶ Calcular Posición Vectorial</button>
+                <div class="resultados-panel" id="result-sistemas" style="display:none;">
+                    <div class="kpi-row">
+                        <div class="kpi">Coordenada X <span><span id="sist_x"></span> km</span></div>
+                        <div class="kpi">Coordenada Y <span><span id="sist_y"></span> km</span></div>
+                        <div class="kpi">Coordenada Z <span><span id="sist_z"></span> km</span></div>
+                    </div>
+                    <div class="grid-2">
+                        <div id="sist_tabla"></div>
+                        <canvas id="sist_chart"></canvas>
+                    </div>
+                    <div id="sist_iteraciones" style="margin-top:1rem;"></div>
+                    <div class="interpretacion" id="sist_interp"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="modulo-edo" class="modulo" data-modulo="edo">
+            <div class="modulo-header">
+                <span class="eyebrow" style="background:var(--color-2-bg);color:var(--color-2);">📉 Escenario B</span>
+                <h2>Simulación de Descenso Cinemático Crítico</h2>
+                <p>Modelado de variación altimétrica temporal: $\frac{dH}{dt} = E \cdot \sin(t) - G$</p>
+            </div>
+            <div class="context-card"><div class="context-grid">
+                <div><strong>Fuerzas del Entorno</strong>Oposición cinemática entre atracción gravitatoria neta $G$ y campos magnéticos oscilatorios $E$.</div>
+                <div><strong>Métricas del Sistema</strong>Altitud instantánea $H(t)$, paso temporal discriminado $h=0.1$ segundos.</div>
+                <div><strong>Umbral de Control</strong>Determinación analítica del cruce por la frontera del tráfico comercial (2,000 metros).</div>
+            </div></div>
+            <div class="tabs-container">
+                <div class="tabs-buttons">
+                    <button class="tab-btn active">Estructura Dinámica</button>
+                    <button class="tab-btn">Algoritmos de Integración</button>
+                </div>
+                <div class="tab-content active">Modela un comportamiento cinemático altamente complejo donde el empuje del FANI varía de forma armónica sinusoidal, generando perfiles de desaceleración abruptos que escapan al análisis lineal uniforme de la física clásica.</div>
+                <div class="tab-content">Permite contrastar la estabilidad de convergencia entre aproximaciones de paso simple de primer orden (Euler), correcciones geométricas tangenciales (Heun) y el resolvedor de alto orden Runge-Kutta 4 (RK4).</div>
+            </div>
+            <div class="panel-analisis">
+                <h3 style="color:var(--color-2);">🕹️ Parámetros Cinemáticos de la EDO</h3>
+                <div class="form-grid">
+                    <label>Altitud de Partida H₀ (m): <input type="number" id="edo_h0" value="15000"></label>
+                    <label>Amplitud de Empuje E: <input type="number" id="edo_empuje" value="400"></label>
+                    <label>Atracción Gravitatoria G (m/s): <input type="number" id="edo_perdida" value="1500"></label>
+                    <label>Zona de Alarma Crítica (m): <input type="number" id="edo_critica" value="2000"></label>
+                    <label>Algoritmo Solucionador:
+                        <select id="edo_metodo" style="width:100%">
+                            <option value="rk4">Runge-Kutta 4to Orden (RK4)</option>
+                            <option value="euler">Euler (Primer Orden)</option>
+                            <option value="heun">Heun (Segundo Orden)</option>
+                        </select>
+                    </label>
+                </div>
+                <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;">
+                    <button id="pruebaEDOBtn" class="btn-secundario">📋 Cargar Caso de Estudio B</button>
+                    <button class="btn-ejecutar" data-modulo="edo">▶ Iniciar Simulación Temporal</button>
+                </div>
+                <div class="resultados-panel" id="result-edo" style="display:none;">
+                    <div class="kpi-row">
+                        <div class="kpi">Tiempo de Arribo Crítico <span><span id="edo_tcruce"></span> s</span></div>
+                        <div class="kpi">Altitud Terminal Registrada <span><span id="edo_hfinal"></span> m</span></div>
+                    </div>
+                    <div class="grid-2">
+                        <div id="edo_tabla"></div>
+                        <canvas id="edo_chart"></canvas>
+                    </div>
+                    <div class="interpretacion" id="edo_interp"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="modulo-interpolacion" class="modulo" data-modulo="interpolacion">
+            <div class="modulo-header">
+                <span class="eyebrow" style="background:var(--color-3-bg);color:var(--color-3);">📈 Escenario C</span>
+                <h2>Reconstrucción de Ruta Continua de Vuelo</h2>
+                <p>Modelado y aproximación polinomial a partir de lecturas dispersas en coordenadas temporales.</p>
+            </div>
+            <div class="context-card"><div class="context-grid">
+                <div><strong>Dataset de Muestreo</strong>Registros vectoriales discretos e intermitentes extraídos de la bitácora del radar.</div>
+                <div><strong>Ajuste Polinomial</strong>Modelado segmental de fronteras continuas diferenciables de segundo orden.</div>
+                <div><strong>Interpolación</strong>Estimación predictiva de la posición exacta del vector en instantes intermedios sin sensor.</div>
+            </div></div>
+            <div class="panel-analisis">
+                <h3>Definición de Matriz de Coordenadas Secuenciales (tiempo,altitud; ...)</h3>
+                <div class="form-grid" style="grid-template-columns: 1fr;">
+                    <label>Puntos Discretos de Muestreo: <input type="text" id="interp_puntos" value="1,800;5,1200;10,2500;15,3100;20,2800;30,2200" style="width:100%"></label>
+                </div>
+                <div class="form-grid">
+                    <label>Instante Objetivo a Estimar (s): <input type="number" id="interp_tiempo" value="3"></label>
+                    <label>Estrategia de Interpolación:
+                        <select id="interp_metodo" style="width:100%">
+                            <option value="spline">Splines Cúbicos Naturales</option>
+                            <option value="lagrange">Polinomio Global de Lagrange</option>
+                        </select>
+                    </label>
+                </div>
+                <div style="display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0;">
+                    <button id="pruebaInterpBtn" class="btn-secundario">📋 Cargar Caso de Estudio C</button>
+                    <button class="btn-ejecutar" data-modulo="interpolacion">▶ Trazar Curva de Vuelo</button>
+                </div>
+                <div class="resultados-panel" id="result-interpolacion" style="display:none;">
+                    <div class="kpi-row"><div class="kpi">Altitud Estimada Calculada <span><span id="interp_valor"></span> m</span></div></div>
+                    <div class="grid-2">
+                        <div id="interp_tabla"></div>
+                        <canvas id="interp_chart"></canvas>
+                    </div>
+                    <div class="interpretacion" id="interp_interp"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="modulo-integracion" class="modulo" data-modulo="integracion">
+            <div class="modulo-header">
+                <span class="eyebrow" style="background:var(--color-4-bg);color:var(--color-4);">📐 Escenario D</span>
+                <h2>Desplazamiento Total Acumulado</h2>
+                <p>Cálculo cinemático espacial de cuadratura: ∫v(t)dt con v(t) = 20 + 5·sin(0.5t) + 0.2t \, dt$</p>
+            </div>
+            <div class="panel-analisis">
+                <h3>Parámetros Límites de Cuadratura Numérica</h3>
+                <div class="form-grid">
+                    <label>Límite Inferior de Observación a (s): <input type="number" id="int_a" value="0"></label>
+                    <label>Límite Superior de Observación b (s): <input type="number" id="int_b" value="60"></label>
+                    <label>Subintervalos de Partición (n): <input type="number" id="int_n" value="100"></label>
+                    <label>Algoritmo de Cuadratura:
+                        <select id="int_metodo" style="width:100%">
+                            <option value="simpson13">Regla de Simpson 1/3 (Par)</option>
+                            <option value="trapecio">Regla del Trapecio Compuesto</option>
+                            <option value="simpson38">Regla de Simpson 3/8</option>
+                        </select>
+                    </label>
+                </div>
+                <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;">
+                    <button id="pruebaIntegBtn" class="btn-secundario">📋 Cargar Caso de Estudio D</button>
+                    <button class="btn-ejecutar" data-modulo="integracion">▶ Ejecutar Cuadratura</button>
+                </div>
+                <div class="resultados-panel" id="result-integracion" style="display:none;">
+                    <div class="kpi-row">
+                        <div class="kpi">Desplazamiento Numérico <span><span id="int_dist"></span> m</span></div>
+                        <div class="kpi">Límite Cinemático Lineal <span><span id="int_lineal"></span> m</span></div>
+                        <div class="kpi">Magnitud de la Anomalía <span><span id="int_anomalia"></span>%</span></div>
+                    </div>
+                    <div class="grid-2">
+                        <div id="int_tabla"></div>
+                        <canvas id="int_chart"></canvas>
+                    </div>
+                    <div class="interpretacion" id="int_interp"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="modulo-raices" class="modulo" data-modulo="raices">
+            <div class="modulo-header">
+                <span class="eyebrow" style="background:var(--color-5-bg);color:var(--color-5);">🔥 Escenario E</span>
+                <h2>Umbral de Propulsión de Equilibrio Térmico</h2>
+                <p>Resolución de ecuación trascendente asintótica: $f(v) = E_{rad} \cdot (1 - e^{-k \cdot v}) - E_{sensor} = 0$</p>
+            </div>
+            <div class="context-card"><div class="context-grid">
+                <div><strong>Dinámica Calorífica</strong>Fricción atmosférica asintótica extrema equilibrada por el campo magnético de aislamiento.</div>
+                <div><strong>Variables Críticas</strong>Límite de radiación térmica disipada contra la firma de conductividad energética base.</div>
+                <div><strong>Criterio de Convergencia</strong>Determinación de la velocidad crítica $v^*$ donde se neutraliza el residuo energético.</div>
+            </div></div>
+            <div class="panel-analisis">
+                <h3 style="color:var(--color-5);">⚙️ Parámetros de Energía y Coeficientes</h3>
+                <div class="form-grid">
+                    <label>Energía del Sensor Base (E_sensor): <input type="number" id="raiz_sensor" value="500"></label>
+                    <label>Límite Radiación Emitida (E_rad): <input type="number" id="raiz_radiacion" value="580"></label>
+                    <label>Coeficiente Atenuación Térmica (k): <input type="number" id="raiz_k" value="0.2" step="0.05"></label>
+                    <label>Algoritmo de Búsqueda de Raíces:
+                        <select id="raiz_metodo" style="width:100%">
+                            <option value="newton">Newton-Raphson (Convergencia Cuadrática)</option>
+                            <option value="secante">Método de la Secante (Superlineal)</option>
+                            <option value="biseccion">Bisección Enclava (Límites Estrictos)</option>
+                        </select>
+                    </label>
+                    <label>Aproximación Inicial x₀ / Límite Inferior a: <input type="number" id="raiz_x0" value="1"></label>
+                    <label>Punto Auxiliar x₁ / Límite Superior b: <input type="number" id="raiz_x1" value="20" placeholder="Para Bisección/Secante"></label>
+                </div>
+                <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;">
+                    <button id="pruebaRaizBtn" class="btn-secundario">⚡ Cargar Caso de Estudio E</button>
+                    <button class="btn-ejecutar" data-modulo="raices">▶ Encontrar Punto de Equilibrio</button>
+                </div>
+                <div class="resultados-panel" id="result-raices" style="display:none;">
+                    <div class="kpi-row">
+                        <div class="kpi">Velocidad de Neutralización v* <span><span id="raiz_valor"></span> m/s</span></div>
+                        <div class="kpi" style="display:none;">Residuo C <span><span id="raiz_C"></span> u.</span></div>
+                    </div>
+                    <div class="grid-2" style="grid-template-columns: 1fr;">
+                        <div id="raiz_tabla_iter"></div>
+                        <canvas id="raiz_chart"></canvas>
+                    </div>
+                    <div class="interpretacion" id="raiz_interp"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="modulo-malcond" class="modulo" data-modulo="malcond">
+            <div class="modulo-header">
+                <span class="eyebrow" style="background:var(--color-6-bg);color:var(--color-6);">⚠️ Escenario F</span>
+                <h2>Sistemas Mal Condicionados ante Distorsión Electromagnética</h2>
+                <p>Cálculo explícito del número de condición de rigidez espacial $\kappa(A) = \|A\|_1 \cdot \|A^{-1}\|_1$ bajo perturbación inducida $\Delta b = 5\%$</p>
+            </div>
+            <div class="panel-analisis">
+                <div class="form-grid">
+                    <label>Matriz de Coeficientes A (Filas separadas por ";", columnas por ","): <input type="text" id="mat_a" value="2,1,1;1,2,1;1,1,2" style="width:100%"></label>
+                    <label>Vector de Carga b (Separado por comas): <input type="text" id="vec_b" value="6,6,6"></label>
+                </div>
+                <button class="btn-ejecutar" data-modulo="malcond">▶ Evaluar Estabilidad Matricial</button>
+                <div class="resultados-panel" id="result-malcond" style="display:none;">
+                    <div class="kpi-row">
+                        <div class="kpi">Número de Condición κ(A) <span><span id="cond_num"></span></span></div>
+                        <div class="kpi">Estado Operativo de Estabilidad <span><span id="cond_estado"></span></span></div>
+                    </div>
+                    <div class="grid-2">
+                        <div id="cond_tabla"></div>
+                        <div id="cond_inversa"></div>
+                    </div>
+                    <div class="interpretacion" id="cond_interp"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="modulo-social" class="modulo" data-modulo="social">
+            <div class="modulo-header">
+                <span class="eyebrow" style="background:var(--color-7-bg);color:var(--color-7);">📢 Escenario G</span>
+                <h2>Propagación de Histeria Colectiva Post-Avistamiento</h2>
+                <p>Resolución acoplada vectorizada de EDO epidemiológicas de pánico: Escépticos ($E$), Alarmados ($A$), Medios ($M$)</p>
+            </div>
+            <div class="panel-analisis">
+                <div class="form-grid">
+                    <label>Tasa de Contagio Informativo (a): <input id="social_a" value="0.05"></label>
+                    <label>Tasa de Recuperación Racional (b): <input id="social_b" value="0.02"></label>
+                    <label>Freno por Regulación de Medios (c): <input id="social_c" value="0.1"></label>
+                    <label>Amplificación Periodística (k): <input id="social_k" value="0.3"></label>
+                    <label>Decaimiento por Saturación (r): <input id="social_r" value="0.07"></label>
+                    <label>Ventana Temporal Máxima (días): <input id="social_tmax" value="50"></label>
+                    <label>Paso Computacional de Simulación (h): <input id="social_h" value="0.5"></label>
+                </div>
+                <button class="btn-ejecutar" data-modulo="social">▶ Simular Comportamiento de Masas</button>
+                <div class="resultados-panel" id="result-social" style="display:none;">
+                    <div class="kpi-row">
+                        <div class="kpi">Densidad de Escépticos (E) <span><span id="social_Ef"></span></span></div>
+                        <div class="kpi">Densidad de Alarmados (A) <span><span id="social_Af"></span></span></div>
+                        <div class="kpi">Densidad de Medios (M) <span><span id="social_Mf"></span></span></div>
+                    </div>
+                    <div class="grid-2" style="grid-template-columns: 1fr;">
+                        <canvas id="social_chart"></canvas>
+                    </div>
+                    <div class="interpretacion" id="social_interp"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="conclusiones" class="modulo conclusiones">
+            <div class="modulo-header">
+                <span class="eyebrow" style="background:var(--color-2-bg);color:var(--color-2);">📋 Análisis Académico</span>
+                <h2>Conclusiones Globales y Checklist de Autoevaluación</h2>
+            </div>
+            <div class="tabs-container">
+                <div class="tabs-buttons">
+                    <button class="tab-btn active">Conclusiones Científicas</button>
+                    <button class="tab-btn">Alcances y Limitaciones</button>
+                    <button class="tab-btn">Checklist Rúbrica</button>
+                </div>
+
+                <div class="tab-content active">
+                    <p><strong>A — Sistemas Lineales:</strong> El método algebraico reduce con precisión errores geométricos en configuraciones tridimensionales complejas. La dominancia diagonal forzada mediante permutación asegura la convergencia óptima.</p>
+                    <p style="margin-top:0.8rem"><strong>B — Resolución de EDO:</strong> Los resolvedores numéricos capturan variaciones mecánicas sinusoidales abruptas. Comparativamente, RK4 mitiga los errores de truncamiento locales frente a aproximaciones de paso lineal ordinarias.</p>
+                    <p style="margin-top:0.8rem"><strong>C — Interpolación Segmental:</strong> Los splines cúbicos naturales garantizan una suavidad continua de grado $C^2$ eliminando oscilaciones no deseadas en las fronteras y ajustando trayectorias erráticas a leyes cinemáticas plausibles.</p>
+                    <p style="margin-top:0.8rem"><strong>D — Cuadratura Numérica:</strong> La regla de Simpson compuesta exhibe un orden de convergencia superior $O(h^4)$, detectando incrementos cinemáticos energéticos invisibles para las aproximaciones cinemáticas clásicas uniformes.</p>
+                    <p style="margin-top:0.8rem"><strong>E — Raíces No Lineales:</strong> El modelado exponencial asintótico asienta un comportamiento físico preciso de fricción límite. Newton-Raphson demuestra superioridad cuadrática en velocidad frente a la bisección lineal.</p>
+                    <p style="margin-top:0.8rem"><strong>F — Estabilidad de Sistemas:</strong> Un número de condición elevado delata una vulnerabilidad latente ante interferencias de camuflaje. La evaluación cuantitativa permite anticipar fallas críticas en los dispositivos de telemetría aérea.</p>
+                    <p style="margin-top:0.8rem"><strong>G — Sistemas Acoplados:</strong> El coeficiente de atenuación informativa $c$ opera como el atractor principal del equilibrio social. Valores bajos inducen a focos crónicos estables de alarma colectiva sostenida.</p>
+                </div>
+
+                <div class="tab-content">
+                    <p><strong>Alcances Tecnológicos:</strong> La arquitectura implementada abarca análisis algebraicos multivariables, cuadratura, raíces complejas, sistemas continuos y estabilidad de matrices en tiempo real y del lado del cliente.</p>
+                    <p style="margin-top:0.8rem"><strong>Limitaciones Metodológicas:</strong></p>
+                    <ul style="margin-top:0.5rem;padding-left:1.5rem;color:var(--text-secondary);">
+                        <li>Naturaleza estrictamente determinista sin variables estocásticas añadidas.</li>
+                        <li>Tratamiento de interpolaciones asumiendo suavidad continua libre de discontinuidades físicas reales.</li>
+                        <li>Modelado poblacional macroscópico homogéneo que omite la topología heterogénea de redes.</li>
+                    </ul>
+                </div>
+
+                <div class="tab-content checklist">
+                    <ul>
+                        <li>El centro de control web presenta un título científico formal y define de manera rigurosa cada modelo.</li>
+                        <li>Se implementaron los 7 módulos funcionales de cómputo numérico obligatorios para proyectos grupales.</li>
+                        <li>Validación estricta de variables físicas capturadas en formularios previniendo divisiones por cero o NaN.</li>
+                        <li>Impresión dinámica directa de matrices, tablas iterativas completas y vectores residuales eliminando la consola.</li>
+                        <li>Integración de gráficas dinámicas interactivas responsivas enlazadas a los resolvedores mediante Chart.js.</li>
+                        <li>Configuración unificada automatizada para los tres casos de estudio del cuaderno de evaluación técnica.</li>
+                        <li>Arquitectura modular frontend con desacoplamiento absoluto de capas mediante 9 archivos independientes.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Proyecto FANI Lab · Métodos Numéricos UMSA 2026 · <a href="https://github.com/usuario/control-fani-numerico">Repositorio Central Git</a> · Publicado vía GitHub Pages</p>
+        </footer>
+    </main>
+
+    <script src="js/utils.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/modulo1_sistemas.js"></script>
+    <script src="js/modulo2_edo.js"></script>
+    <script src="js/modulo3_interpolacion.js"></script>
+    <script src="js/modulo4_integracion.js"></script>
+    <script src="js/modulo5_raices.js"></script>
+    <script src="js/modulo6_mal_condicionado.js"></script>
+    <script src="js/modulo7_social.js"></script>
+</body>
+</html>
